@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leonardolima.parkrestapi.dtos.UserCreateDTO;
+import com.leonardolima.parkrestapi.dtos.UserResponseDTO;
+import com.leonardolima.parkrestapi.dtos.mapper.UserMapper;
 import com.leonardolima.parkrestapi.entities.User;
 import com.leonardolima.parkrestapi.services.UserService;
 
@@ -25,14 +28,14 @@ public class UserController {
     public final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO user) {
+        User newUser = userService.saveUser(UserMapper.toUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDTO(newUser));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.searchUserById(id);
+        User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 

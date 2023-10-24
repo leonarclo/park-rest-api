@@ -22,13 +22,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User searchUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
     }
 
     @Transactional
     public User updatePassword(Long id, String password) {
-        User user = searchUserById(id);
+        User user = getUserById(id);
         user.setPassword(password);
         return user;
     }
