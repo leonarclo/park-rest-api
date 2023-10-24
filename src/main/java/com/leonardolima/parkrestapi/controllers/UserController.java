@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leonardolima.parkrestapi.dtos.UpdatePasswordDTO;
 import com.leonardolima.parkrestapi.dtos.UserCreateDTO;
 import com.leonardolima.parkrestapi.dtos.UserResponseDTO;
 import com.leonardolima.parkrestapi.dtos.mapper.UserMapper;
 import com.leonardolima.parkrestapi.entities.User;
 import com.leonardolima.parkrestapi.services.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,26 +30,26 @@ public class UserController {
     public final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO user) {
-        User newUser = userService.saveUser(UserMapper.toUser(user));
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDTO(newUser));
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreateDTO user) {
+        User newUser = userService.saveUser(UserMapper.toCreateUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponseUser(newUser));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(UserMapper.toResponseUser(user));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user) {
-        User getUser = userService.updatePassword(id, user.getPassword());
-        return ResponseEntity.ok(getUser);
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordDTO user) {
+        userService.updatePassword(id, user.getCurrent_password(), user.getNew_password(), user.getConfirm_new_password());
+        return ResponseEntity.ok("Senha alterada com sucesso!");
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(UserMapper.toListUser(users));
     }
 }

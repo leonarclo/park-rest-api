@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### LOCALHOST DB CONFIG ###
+resources/application.properties
