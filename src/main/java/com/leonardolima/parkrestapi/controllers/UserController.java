@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordDTO user) {
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @Valid @RequestBody UpdatePasswordDTO user) {
         userService.updatePassword(id, user.getCurrent_password(), user.getNew_password(), user.getConfirm_new_password());
         return ResponseEntity.ok("Senha alterada com sucesso!");
     }

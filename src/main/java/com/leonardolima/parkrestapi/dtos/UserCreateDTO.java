@@ -22,7 +22,7 @@ public class UserCreateDTO {
     private String name;
 
     @NotBlank(message = "O email não pode estar em branco.")
-    @Email(message = "Formato do email inválido!")
+    @Email(message = "Formato do email inválido!", regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
 
     @NotBlank(message = "A senha não pode estar em branco.")

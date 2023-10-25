@@ -1,11 +1,14 @@
 package com.leonardolima.parkrestapi.services;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.leonardolima.parkrestapi.entities.User;
+import com.leonardolima.parkrestapi.exceptions.UserUniqueViolationException;
 import com.leonardolima.parkrestapi.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,16 @@ public class UserService {
     
     @Transactional
     public User saveUser(User user) {
-        userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("Usuário já existe no banco de dados!"));
+        try {
+            
+        } catch (DataIntegrityViolationException exception) {
+            throw new UserUniqueViolationException(String.format("O usuário " + user.getName() + " já está cadastrado."));
+        }
+
+        Optional<User> findUser = userRepository.findByEmail(user.getEmail());
+        if (findUser.isPresent()) {
+            throw new RuntimeException("Este usuário já existe no banco de dados");
+        }
         return userRepository.save(user);
     }
 
