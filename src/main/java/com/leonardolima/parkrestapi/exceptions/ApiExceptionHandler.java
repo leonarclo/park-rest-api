@@ -25,9 +25,24 @@ public class ApiExceptionHandler {
 
     
     @ExceptionHandler(UserUniqueViolationException.class)
-    public ResponseEntity<ErrorMessage> userUniqueViolationException(MethodArgumentNotValidException exception, HttpServletRequest request, BindingResult result) {
+    public ResponseEntity<ErrorMessage> userUniqueViolationException(RuntimeException exception, HttpServletRequest request) {
 
         log.error("Api error: ", exception);
         return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request, HttpStatus.CONFLICT, exception.getMessage()));
+    }
+
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> entityNotFoundException(RuntimeException exception, HttpServletRequest request) {
+
+        log.error("Api error: ", exception);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request, HttpStatus.NOT_FOUND, exception.getMessage()));
+    }
+
+    @ExceptionHandler(PasswordInvalidException.class)
+    public ResponseEntity<ErrorMessage> passwordInvalidException(RuntimeException exception, HttpServletRequest request) {
+
+        log.error("Api error: ", exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, exception.getMessage()));
     }
 }
