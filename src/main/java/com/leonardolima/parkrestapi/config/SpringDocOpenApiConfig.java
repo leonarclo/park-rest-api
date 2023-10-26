@@ -12,7 +12,7 @@ import io.swagger.v3.oas.models.info.License;
 public class SpringDocOpenApiConfig {
     
     @Bean
-    public OpenAPI openAPI() {
+    OpenAPI openAPI() {
         return new OpenAPI()
         .info(new Info()
         .title("REST API - Spring Park").description("API para gestão de estacionamento de veículos.")
